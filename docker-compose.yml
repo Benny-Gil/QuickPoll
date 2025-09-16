@@ -5,8 +5,6 @@ services:
       POSTGRES_DB: quickpoll
       POSTGRES_USER: quickpoll
       POSTGRES_PASSWORD: quickpoll
-    ports:
-      - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
@@ -14,6 +12,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - backend-net
 
   backend:
     build:
@@ -28,13 +28,46 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    ports:
-      - "8080:8080"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/api/polls"]
       interval: 30s
       timeout: 10s
       retries: 3
+    networks:
+      - backend-net
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - backend-net
+
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     - NEXT_PUBLIC_API_URL=http://backend:8080/api
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     backend:
+  #       condition: service_healthy
 
 volumes:
   db_data:
+
+networks:
+  backend-net:
+    driver: bridge
