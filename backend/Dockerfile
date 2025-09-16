@@ -1,11 +1,31 @@
-FROM maven:3.9-eclipse-temurin-21 AS build
+# Build stage
+FROM eclipse-temurin:17-jdk-jammy AS build
 WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-RUN mvn -B -e package -DskipTests
 
-FROM eclipse-temurin:21-jre-jammy
+# Copy maven files first to cache dependencies
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+RUN chmod +x mvnw
+RUN ./mvnw dependency:go-offline
+
+# Copy source code and build
+COPY src src
+RUN ./mvnw package -DskipTests
+
+# Run stage
+FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
-COPY --from=build /app/target/quickpoll-0.0.1-SNAPSHOT.jar app.jar
+
+# Copy jar from build stage
+COPY --from=build /app/target/*.jar app.jar
+
+# Add healthcheck
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+  CMD curl -f http://localhost:8080/api/polls || exit 1
+
+# Expose port
 EXPOSE 8080
+
+# Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
