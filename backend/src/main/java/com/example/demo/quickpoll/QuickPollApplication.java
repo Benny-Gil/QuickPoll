@@ -1,4 +1,4 @@
-package co.energin.demo.quickpoll;
+package com.example.demo.quickpoll;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
