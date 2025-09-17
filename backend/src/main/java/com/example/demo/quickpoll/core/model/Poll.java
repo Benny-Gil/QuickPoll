@@ -13,4 +13,5 @@ public class Poll {
     private String question;
     private Instant createdAt;
     private List<Option> options = new ArrayList<>();
+
 }
