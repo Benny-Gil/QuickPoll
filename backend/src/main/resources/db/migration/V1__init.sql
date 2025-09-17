@@ -17,4 +17,4 @@ INSERT INTO option (text, poll_id) VALUES
     ('Java', 1),
     ('Python', 1),
     ('JavaScript', 1),
-    ('TypeScript', 1);
+    ('TypeScript', 1);  

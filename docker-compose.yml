@@ -53,18 +53,6 @@ services:
     networks:
       - backend-net
 
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   environment:
-  #     - NEXT_PUBLIC_API_URL=http://backend:8080/api
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     backend:
-  #       condition: service_healthy
-
 volumes:
   db_data:
 
