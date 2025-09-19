@@ -1,0 +1,14 @@
+:root{
+  --max: 900px;
+}
+body{font-family:Inter, ui-sans-serif, system-ui; margin:0; padding:24px; background:#f7f7fb}
+.container{max-width:var(--max); margin:0 auto}
+h1{margin-top:0}
+.create input, .create button{display:block; margin:8px 0; padding:8px}
+.lists{display:grid; grid-template-columns:1fr 1fr; gap:24px}
+.polls ul, .details ul{list-style:none; padding:0}
+.polls li{margin-bottom:8px}
+.link{background:none; border:none; color:#0366d6; cursor:pointer; padding:0}
+.option-row{display:flex; gap:12px; align-items:center}
+.option-row .votes{margin-left:auto; color:#333}
+.create-actions{display:flex; gap:8px}
